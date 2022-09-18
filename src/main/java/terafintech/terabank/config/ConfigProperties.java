@@ -1,13 +1,14 @@
 package terafintech.terabank.config;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
-@ConfigurationProperties(prefix = "config.token")
-@Data
+@Configuration
+@ConfigurationProperties(prefix="config")
+@Getter @Setter
 public class ConfigProperties {
 
-    private String secretkey;
+    private String token;
 }
