@@ -31,4 +31,6 @@ public class AccountApiController {
         return new ApplyAccountResponse(account.getUserId(), account.getPublicKey(), account.getPrivateKey());
     }
 
+    @PostMapping("/api")
+
 }
