@@ -3,6 +3,7 @@ package terafintech.terabank.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.With;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,6 +12,9 @@ import java.util.List;
 @Entity
 @Getter @Setter
 public class Account {
+    /**
+     * 계좌 데이터
+     */
 
     @Id @GeneratedValue
     @Column(name = "account_id")
@@ -28,16 +32,18 @@ public class Account {
     private int money;
 
     /**
-     * 거래 내역
+     * 입금 내역
      */
-//    @OneToMany(mappedBy = "transactionHistory")
-//    private List<TransactionHistory> transactionHistoryList = new ArrayList<>();
-
     @OneToMany(mappedBy = "receiver") // 읽기 전용
     private List<DepositHistory> depositHistories = new ArrayList<>();
 
+    /**
+     * 출금 내역
+     */
     @OneToMany(mappedBy = "sender") // 읽기 전용
     private List<WithdrawHistory> withdrawHistories = new ArrayList<>();
+
+
     /**
      * 사용자 공개키 (public token)
      */
@@ -47,4 +53,21 @@ public class Account {
      * 사용자 비밀키 (private token)
      */
     private String privateKey;
+
+    /**
+     * 입금 처리
+     */
+    @Transactional(rollbackFor = {Exception.class})
+    public void addMoney(int amount) {
+        this.setMoney(this.getMoney() + amount);
+    }
+
+    /**
+     * 출금 처리
+     */
+    @Transactional(rollbackFor = {Exception.class})
+    public void minusMoney(int amount) {
+        this.setMoney(this.getMoney() - amount);
+    }
+
 }

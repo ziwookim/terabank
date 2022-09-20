@@ -1,4 +1,4 @@
-package terafintech.terabank.api.dto;
+package terafintech.terabank.dto;
 
 import lombok.Data;
 

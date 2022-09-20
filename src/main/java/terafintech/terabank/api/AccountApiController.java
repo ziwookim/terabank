@@ -1,12 +1,11 @@
 package terafintech.terabank.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import terafintech.terabank.api.dto.ApplyAccountRequest;
-import terafintech.terabank.api.dto.ApplyAccountResponse;
+import terafintech.terabank.dto.ApplyAccountRequest;
+import terafintech.terabank.dto.ApplyAccountResponse;
 import terafintech.terabank.domain.Account;
 import terafintech.terabank.service.AccountService;
 
@@ -30,7 +29,5 @@ public class AccountApiController {
 
         return new ApplyAccountResponse(account.getUserId(), account.getPublicKey(), account.getPrivateKey());
     }
-
-    @PostMapping("/api")
 
 }

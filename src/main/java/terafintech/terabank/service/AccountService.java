@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import terafintech.terabank.config.ConfigProperties;
 import terafintech.terabank.domain.Account;
-import terafintech.terabank.domain.TransactionType;
 import terafintech.terabank.repository.AccountRepository;
 import terafintech.terabank.token.JwtTokenProvider;
 
@@ -28,10 +27,10 @@ public class AccountService {
         // 중복 userId 검증 && 4자리 이상 값 검증
         validateDuplicateAccount(account);
 
-        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+//        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
         // 토큰 생성
-        account.setPublicKey(jwtTokenProvider.createToken(account.getUserId(), configProperties.getToken()));
-        account.setPrivateKey(jwtTokenProvider.createToken(account.getUserId(), configProperties.getToken()));
+        account.setPublicKey(new JwtTokenProvider().createToken(account.getUserId(), configProperties.getPublicKey()));
+        account.setPrivateKey(new JwtTokenProvider().createToken(account.getUserId(), configProperties.getPrivateKey()));
         account.setMoney(0);
 
         accountRepository.save(account);
@@ -39,19 +38,8 @@ public class AccountService {
         return account.getId();
     }
 
-    public Account findOne(Long accountId) {
-        return accountRepository.findOne(accountId);
-    }
-
-    @Transactional
-    public void applyTransaction(Long id, TransactionType transactionType, int amount) {
-        Account account = accountRepository.findOne(id);
-
-        if(transactionType.equals(TransactionType.DEPOSIT)) {
-            account.setMoney(account.getMoney() + amount);
-        } else if(transactionType.equals(TransactionType.WITHDRAWAL)) {
-            account.setMoney(account.getMoney() - amount);
-        }
+    public Account findOne(Long id) {
+        return accountRepository.findOne(id);
     }
 
     public void validateDuplicateAccount(Account account) {

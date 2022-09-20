@@ -14,9 +14,9 @@ import java.util.Date;
 
 public class JwtTokenProvider {
 
-//    private long tokenValidTime = 30000000 * 60000000 * 1000L;
+//    private long tokenValidTime = 1000 * 3000 * 1000L;
 
-    public String createToken(String userId, String token) {
+    public String createToken(String userId, String key) {
 
         Claims claims = Jwts.claims().setSubject(userId);
 
@@ -26,7 +26,7 @@ public class JwtTokenProvider {
                 .setIssuedAt(now)
 //                .setExpiration(new Date(now.getTime() + tokenValidTime))
 //                .signWith(SignatureAlgorithm.HS256, configProperties.getToken())
-                .signWith(SignatureAlgorithm.HS256, token)
+                .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }
 

@@ -2,6 +2,11 @@ package terafintech.terabank.domain;
 
 public enum TransactionResult {
     /**
+     * 송금, 입금, 출금 시도 결과 코드 열거형 리스트
+     */
+
+
+    /**
      * 성공
      */
     SUCCESS(100),
@@ -14,7 +19,7 @@ public enum TransactionResult {
     /**
      * 입금액 입력 오류
      */
-    INVALIDAMOUNT(666),
+    INVALIDAMOUNT(7777),
 
     /**
      * 출금자 오류
@@ -24,7 +29,12 @@ public enum TransactionResult {
     /**
      * 입금자 오류
      */
-    RECEIVERERROR(999);
+    RECEIVERERROR(999),
+
+    /**
+     * 기타 오류
+     */
+    OTHERPROBLEMS(6666);
 
     private int resultCode;
 

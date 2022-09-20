@@ -6,9 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix="config")
+@ConfigurationProperties(prefix="config.token")
 @Getter @Setter
 public class ConfigProperties {
 
-    private String token;
+    private String publicKey;
+    private String privateKey;
 }
