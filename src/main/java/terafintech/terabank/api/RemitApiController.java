@@ -7,29 +7,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import terafintech.terabank.dto.CreateRemitRequest;
 import terafintech.terabank.dto.CreateRemitResponse;
-import terafintech.terabank.domain.TransactionHistory;
+import terafintech.terabank.domain.RemitHistory;
 import terafintech.terabank.dto.GetRemitReponse;
 import terafintech.terabank.dto.GetRemitRequest;
-import terafintech.terabank.service.TransactionHistoryService;
+import terafintech.terabank.service.RemitHistoryService;
 
 import javax.validation.Valid;
 import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
-public class TransactionApiController {
+public class RemitApiController {
 
-    private final TransactionHistoryService transactionHistoryService;
+    private final RemitHistoryService remitHistoryService;
 
     @Async
     @PostMapping("/api/remit")
     public CreateRemitResponse createRemit(@RequestBody @Valid CreateRemitRequest request) throws InterruptedException, ExecutionException {
 
-        Long id = transactionHistoryService.remit(request.getReceiverPublicKey(), request.getSenderPrivateKey(), request.getAmount());
+        Long id = remitHistoryService.remit(request.getReceiverPublicKey(), request.getSenderPrivateKey(), request.getAmount());
 
-        TransactionHistory transactionHistory = transactionHistoryService.findOne(id);
+        RemitHistory remitHistory = remitHistoryService.findOne(id);
 
-        return new CreateRemitResponse(transactionHistory.getResultCode().toString(), transactionHistory.getId().toString());
+        return new CreateRemitResponse(remitHistory.getResultCode().toString(), remitHistory.getId().toString());
     }
 
     @PostMapping("/api/remitInfo")
@@ -44,9 +44,9 @@ public class TransactionApiController {
         }
 
         try{
-            TransactionHistory transactionHistory = transactionHistoryService.findOne(id);
-            if(!transactionHistory.equals(null)) {
-                return new GetRemitReponse(transactionHistory.getResultCode().toString());
+            RemitHistory remitHistory = remitHistoryService.findOne(id);
+            if(!remitHistory.equals(null)) {
+                return new GetRemitReponse(remitHistory.getResultCode().toString());
             }
             return new GetRemitReponse("존재하지 않는 식별 키 입니다.");
         } catch (Exception e) {

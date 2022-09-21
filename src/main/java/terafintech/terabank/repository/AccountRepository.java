@@ -33,6 +33,12 @@ public class AccountRepository {
                 .getSingleResult();
     }
 
+    public Account findOneByPrivateKey(String privateKey) {
+        return em.createQuery("select a from Account a where a.privateKey = :privateKey", Account.class)
+                .setParameter("privateKey", privateKey)
+                .getSingleResult();
+    }
+
     public Account findOneBySecretKey(String privateKey) {
         return em.createQuery("select a from Account a where a.privateKey = :privateKey", Account.class)
                 .setParameter("privateKey", privateKey)

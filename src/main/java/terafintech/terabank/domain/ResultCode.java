@@ -1,6 +1,6 @@
 package terafintech.terabank.domain;
 
-public enum TransactionResult {
+public enum ResultCode {
     /**
      * 송금, 입금, 출금 시도 결과 코드 열거형 리스트
      */
@@ -38,7 +38,7 @@ public enum TransactionResult {
 
     private int resultCode;
 
-    TransactionResult(int resultCode) {
+    ResultCode(int resultCode) {
         this.resultCode = resultCode;
     }
 

@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
 @RequiredArgsConstructor
 public class WithdrawHistoryRepository {
 
-    private EntityManager em;
+    private final EntityManager em;
 
     public void save(WithdrawHistory withdrawHistory) {
         em.persist(withdrawHistory);

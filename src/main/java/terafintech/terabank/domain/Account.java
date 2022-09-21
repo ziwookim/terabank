@@ -29,7 +29,7 @@ public class Account {
     /**
      * 잔액
      */
-    private int money;
+    private int balance;
 
     /**
      * 입금 내역
@@ -57,17 +57,17 @@ public class Account {
     /**
      * 입금 처리
      */
-    @Transactional(rollbackFor = {Exception.class})
-    public void addMoney(int amount) {
-        this.setMoney(this.getMoney() + amount);
+//    @Transactional(rollbackFor = {Exception.class})
+    public void addBalance(int amount) {
+        this.setBalance(this.getBalance() + amount);
     }
 
     /**
      * 출금 처리
      */
-    @Transactional(rollbackFor = {Exception.class})
-    public void minusMoney(int amount) {
-        this.setMoney(this.getMoney() - amount);
+//    @Transactional(rollbackFor = {Exception.class})
+    public void minusBalance(int amount) {
+        this.setBalance(this.getBalance() - amount);
     }
 
 }

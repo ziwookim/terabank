@@ -27,7 +27,7 @@ public class WithdrawHistory {
      * 연관 송금 내역 데이터
      */
     @OneToOne(mappedBy = "withdrawHistory", fetch = FetchType.LAZY)
-    private TransactionHistory transactionHistory;
+    private RemitHistory remitHistory;
 
     /**
      * 실제 출금액
@@ -42,19 +42,18 @@ public class WithdrawHistory {
     /**
      * 출금 처리 결과 코드
      */
-    private TransactionResult resultCode;
+    private ResultCode resultCode;
 
     public static WithdrawHistory createWithdraw(Account sender, int amount) {
 
-        TransactionResult resultCode = TransactionResult.SUCCESS;
-
         WithdrawHistory withdrawHistory = new WithdrawHistory();
+        withdrawHistory.setResultCode(ResultCode.SUCCESS);
 
         /**
          * valid senderPrivateKey value
          */
-        if(sender.equals(null)) {
-            withdrawHistory.setResultCode(TransactionResult.SENDERERROR);
+        if(sender == null) {
+            withdrawHistory.setResultCode(ResultCode.SENDERERROR);
         } else {
             withdrawHistory.setSender(sender);
         }
@@ -64,15 +63,14 @@ public class WithdrawHistory {
          */
 
         if(amount == -999) {
-            withdrawHistory.setResultCode(TransactionResult.INVALIDAMOUNT);
+            withdrawHistory.setResultCode(ResultCode.INVALIDAMOUNT);
         } else if(amount == -1) {
-            withdrawHistory.setResultCode(TransactionResult.LACKOFMONEY);
+            withdrawHistory.setResultCode(ResultCode.LACKOFMONEY);
         } else {
             withdrawHistory.setAmount(amount);
         }
 
-        if(withdrawHistory.getResultCode().equals(TransactionResult.SUCCESS)) {
-            withdrawHistory.setSender(sender);
+        if(withdrawHistory.getResultCode().equals(ResultCode.SUCCESS)) {
             /**
              * 출금 처리
              */
@@ -82,10 +80,10 @@ public class WithdrawHistory {
                 /**
                  * minus Money
                  */
-                sender.minusMoney(withdrawHistory.getAmount());
-                withdrawHistory.setResultCode(TransactionResult.SUCCESS);
+                sender.minusBalance(withdrawHistory.getAmount());
+                withdrawHistory.setResultCode(ResultCode.SUCCESS);
             } catch(Exception e) {
-                withdrawHistory.setResultCode(TransactionResult.OTHERPROBLEMS);
+                withdrawHistory.setResultCode(ResultCode.OTHERPROBLEMS);
             }
 
         }

@@ -28,7 +28,7 @@ public class DepositHistory {
      * 연관 송금 내역 데이드
      */
     @OneToOne(mappedBy = "depositHistory", fetch = FetchType.LAZY)
-    private TransactionHistory transactionHistory;
+    private RemitHistory remitHistory;
 
     /**
      * 실제 입금액
@@ -43,48 +43,44 @@ public class DepositHistory {
     /**
      *  입금 처리 결과 코드
      */
-    private TransactionResult resultCode;
+    private ResultCode resultCode;
 
     /**
      * 입금 데이터 생성
      */
     public static DepositHistory createDeposit(Account receiver, int amount) {
 
-        TransactionResult resultCode = TransactionResult.SUCCESS;
-
         DepositHistory depositHistory = new DepositHistory();
+        depositHistory.setResultCode(ResultCode.SUCCESS);
         depositHistory.setAmount(0);
-
         /**
          * valid receiverPublicKey value
          */
-        if(receiver.equals(null)) {
-            depositHistory.setResultCode(TransactionResult.RECEIVERERROR);
+        if(receiver == null) {
+            depositHistory.setResultCode(ResultCode.RECEIVERERROR);
         } else {
             depositHistory.setReceiver(receiver);
         }
 
         if(amount < 0) {
             depositHistory.setAmount(0);
-            depositHistory.setResultCode(TransactionResult.INVALIDAMOUNT);
+            depositHistory.setResultCode(ResultCode.INVALIDAMOUNT);
         }
         depositHistory.setAmount(amount);
 
-        if(depositHistory.getResultCode().equals(TransactionResult.SUCCESS)) {
-            depositHistory.setReceiver(receiver);
+        if(depositHistory.getResultCode().equals(ResultCode.SUCCESS)) {
             /**
              * 입금 처리
              */
 //            depositHistory = deposit(depositHistory);
             try{
-
                 /**
                  * add Money
                  */
-                receiver.addMoney(depositHistory.getAmount());
-                depositHistory.setResultCode(TransactionResult.SUCCESS);
+                receiver.addBalance(depositHistory.getAmount());
+                depositHistory.setResultCode(ResultCode.SUCCESS);
             } catch(Exception e) {
-                depositHistory.setResultCode(TransactionResult.OTHERPROBLEMS);
+                depositHistory.setResultCode(ResultCode.OTHERPROBLEMS);
             }
         }
 

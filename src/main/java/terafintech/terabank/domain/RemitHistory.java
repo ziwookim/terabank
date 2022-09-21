@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-public class TransactionHistory {
+public class RemitHistory {
     /**
      *  송금 내역 데이터
      */
@@ -49,33 +49,33 @@ public class TransactionHistory {
     /**
      * 송금 처리 결과 코드
      */
-    private TransactionResult resultCode;
+    private ResultCode resultCode;
 
     /**
      * 송금 데이터 생성
      */
-    public static TransactionHistory createTransaction(DepositHistory depositHistory, WithdrawHistory withdrawHistory, String receiverPublicKey, String senderPrivateKey, String amount) {
-        TransactionHistory transactionHistory = new TransactionHistory();
+    public static RemitHistory createTransaction(DepositHistory depositHistory, WithdrawHistory withdrawHistory, String receiverPublicKey, String senderPrivateKey, String amount) {
+        RemitHistory remitHistory = new RemitHistory();
 
-        if(depositHistory.getResultCode().equals(TransactionResult.SUCCESS) &&
-                withdrawHistory.getResultCode().equals(TransactionResult.SUCCESS)) {
-            transactionHistory.setResultCode(TransactionResult.SUCCESS);
-        } else if(!depositHistory.getResultCode().equals(TransactionResult.SUCCESS)) {
+        if(depositHistory.getResultCode().equals(ResultCode.SUCCESS) &&
+                withdrawHistory.getResultCode().equals(ResultCode.SUCCESS)) {
+            remitHistory.setResultCode(ResultCode.SUCCESS);
+        } else if(!depositHistory.getResultCode().equals(ResultCode.SUCCESS)) {
             withdrawHistory.setResultCode(depositHistory.getResultCode());
-            transactionHistory.setResultCode(depositHistory.getResultCode());
+            remitHistory.setResultCode(depositHistory.getResultCode());
         } else {
             depositHistory.setResultCode(withdrawHistory.getResultCode());
-            transactionHistory.setResultCode(withdrawHistory.getResultCode());
+            remitHistory.setResultCode(withdrawHistory.getResultCode());
         }
 
-        transactionHistory.setDepositHistory(depositHistory);
-        transactionHistory.setWithdrawHistory(withdrawHistory);
-        transactionHistory.setReceiverPublicKey(receiverPublicKey);
-        transactionHistory.setSenderPrivateKey(senderPrivateKey);
-        transactionHistory.setAmount(amount);
-        transactionHistory.setTransactionDate(LocalDateTime.now());
+        remitHistory.setDepositHistory(depositHistory);
+        remitHistory.setWithdrawHistory(withdrawHistory);
+        remitHistory.setReceiverPublicKey(receiverPublicKey);
+        remitHistory.setSenderPrivateKey(senderPrivateKey);
+        remitHistory.setAmount(amount);
+        remitHistory.setTransactionDate(LocalDateTime.now());
 
-        return transactionHistory;
+        return remitHistory;
     }
 
 }
