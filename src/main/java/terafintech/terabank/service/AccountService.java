@@ -31,7 +31,7 @@ public class AccountService {
         // 토큰 생성
         account.setPublicKey(new JwtTokenProvider().createToken(account.getUserId(), configProperties.getPublicKey()));
         account.setPrivateKey(new JwtTokenProvider().createToken(account.getUserId(), configProperties.getPrivateKey()));
-        account.setMoney(0);
+        account.setBalance(0);
 
         accountRepository.save(account);
 

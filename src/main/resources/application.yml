@@ -28,3 +28,8 @@ config:
   token:
     publicKey: mWWgJg3iq1RLusf6V5gVebggZKWLtuv5lyqL9V574YveaAuwUgJJQRM4w392C4gq8F79ewBVwIqVx0s8b5JXlDMAsaOBV2k7rQ8tJnXNBJXuZs2h3poN2KLF5Ci4hFmCpbYX3qCeVOy0akpMTyJcr9
     privateKey: lIhtPeJYofPiPoY5zHFfh6T1xaon61hkYyQPimTPtnkTUDKoVQXStsbks5KingBfwbO03FijhPZaS7sVIX78H3K6G3Q3B9DTGUsqeNIavMT70DruyX9a2y8Ym1GFPXTmwv0YfrCDkXCcaw6Y2azl6k
+
+terabank:
+  url:
+    deposit: localhost:8080/api/deposit
+    withdraw: localhost:8080/api/withdraw
