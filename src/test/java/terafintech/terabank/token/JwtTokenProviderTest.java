@@ -19,11 +19,11 @@ public class JwtTokenProviderTest {
     @Test
     public void printToken() throws Exception {
 
-        String token = configProperties.getToken();
+        String publicKey = configProperties.getPublicKey();
 
-        System.out.println("token: " + token);
+        System.out.println("token: " + publicKey);
 
         assertEquals("mWWgJg3iq1RLusf6V5gVebggZKWLtuv5lyqL9V574YveaAuwUgJJQRM4w392C4gq8F79ewBVwIqVx0s8b5JXlDMAsaOBV2k7rQ8tJnXNBJXuZs2h3poN2KLF5Ci4hFmCpbYX3qCeVOy0akpMTyJcr9",
-                token);
+                publicKey);
     }
 }
