@@ -27,8 +27,8 @@ public class DepositHistory {
     /**
      * 연관 송금 내역 데이드
      */
-    @OneToOne(mappedBy = "depositHistory", fetch = FetchType.LAZY)
-    private RemitHistory remitHistory;
+//    @OneToOne(mappedBy = "depositHistory", fetch = FetchType.LAZY)
+//    private RemitHistory remitHistory;
 
     /**
      * 실제 입금액

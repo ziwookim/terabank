@@ -26,8 +26,8 @@ public class WithdrawHistory {
     /**
      * 연관 송금 내역 데이터
      */
-    @OneToOne(mappedBy = "withdrawHistory", fetch = FetchType.LAZY)
-    private RemitHistory remitHistory;
+//    @OneToOne(mappedBy = "withdrawHistory", fetch = FetchType.LAZY)
+//    private RemitHistory remitHistory;
 
     /**
      * 실제 출금액

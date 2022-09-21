@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.xml.transform.Result;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,19 +26,19 @@ public class RemitHistory {
     /**
      * 입금 내역 데이터
      */
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "deposit_history_id")
-    private DepositHistory depositHistory;
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "deposit_history_id")
+//    private DepositHistory depositHistory;
 
     /**
      * 출금 내역 데이터
      */
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "withdraw_history_id")
-    private WithdrawHistory withdrawHistory;
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "withdraw_history_id")
+//    private WithdrawHistory withdrawHistory;
 
     /**
-     * 송금(시도)시 입력된 송금액 드
+     * 송금(시도)시 입력된 송금액 금액
      */
     private String amount;
 
@@ -54,22 +55,20 @@ public class RemitHistory {
     /**
      * 송금 데이터 생성
      */
-    public static RemitHistory createTransaction(DepositHistory depositHistory, WithdrawHistory withdrawHistory, String receiverPublicKey, String senderPrivateKey, String amount) {
+    public static RemitHistory createTransaction(ResultCode depositResult, ResultCode withdrawResult, String receiverPublicKey, String senderPrivateKey, String amount) {
         RemitHistory remitHistory = new RemitHistory();
 
-        if(depositHistory.getResultCode().equals(ResultCode.SUCCESS) &&
-                withdrawHistory.getResultCode().equals(ResultCode.SUCCESS)) {
+        if (depositResult == null || withdrawResult == null) {
+            remitHistory.setResultCode(ResultCode.OTHERPROBLEMS);
+        } else if(depositResult.equals(ResultCode.SUCCESS) &&
+                withdrawResult.equals(ResultCode.SUCCESS)) {
             remitHistory.setResultCode(ResultCode.SUCCESS);
-        } else if(!depositHistory.getResultCode().equals(ResultCode.SUCCESS)) {
-            withdrawHistory.setResultCode(depositHistory.getResultCode());
-            remitHistory.setResultCode(depositHistory.getResultCode());
+        } else if(!depositResult.equals(ResultCode.SUCCESS)) {
+            remitHistory.setResultCode(depositResult);
         } else {
-            depositHistory.setResultCode(withdrawHistory.getResultCode());
-            remitHistory.setResultCode(withdrawHistory.getResultCode());
+            remitHistory.setResultCode(withdrawResult);
         }
 
-        remitHistory.setDepositHistory(depositHistory);
-        remitHistory.setWithdrawHistory(withdrawHistory);
         remitHistory.setReceiverPublicKey(receiverPublicKey);
         remitHistory.setSenderPrivateKey(senderPrivateKey);
         remitHistory.setAmount(amount);

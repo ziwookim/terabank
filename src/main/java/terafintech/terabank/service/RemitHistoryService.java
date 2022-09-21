@@ -3,11 +3,11 @@ package terafintech.terabank.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 import terafintech.terabank.domain.*;
-import terafintech.terabank.exception.InvalidAmountException;
-import terafintech.terabank.repository.AccountRepository;
 import terafintech.terabank.repository.RemitHistoryRepository;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -15,68 +15,82 @@ import terafintech.terabank.repository.RemitHistoryRepository;
 public class RemitHistoryService {
 
     private final RemitHistoryRepository remitHistoryRepository;
-    private final DepositHistoryService depositHistoryService;
-    private final WithdrawHistoryService withdrawHistoryService;
-    private final AccountRepository accountRepository;
+    private final DepositApiService depositApiService;
+    private final WithdrawApiService withdrawApiService;
+
+    public RemitHistory findOne(Long id) {
+        return remitHistoryRepository.findOne(id);
+    }
 
     @Transactional
     public Long remit(String receiverPublicKey, String senderPrivateKey, String amount) {
 
         /**
-         * valid amount value
+         * 입금 api 호출 + 출금 api 호출
          */
-        int checkedAmount = checkAmount(amount);
+        Map<String, Object> resultCodesMap = depositAndWithdrawApiCalls(receiverPublicKey, senderPrivateKey, amount);
 
-        /**
-         *
-         */
+        ResultCode depositResultCode = findResultCode((String) resultCodesMap.get("depositResultCode"));
+        ResultCode withdrawResultCode = findResultCode((String) resultCodesMap.get("withdrawResultCode"));
 
-        Account receiver = depositHistoryService.checkReceiver(receiverPublicKey);
-        // 입금 api 호출
-        DepositHistory depositHistory = DepositHistory.createDeposit(receiver, checkedAmount);
+        RemitHistory remitHistory = RemitHistory.createTransaction(depositResultCode, withdrawResultCode, receiverPublicKey, senderPrivateKey, amount);
 
-//        RestTemplate depositTemplate = new RestTemplate();
-
-        // 출금 api 호출
-        Account sender = withdrawHistoryService.checkSender(senderPrivateKey);
-        int doubleCheckedAmount = checkedAmount;
-        if(doubleCheckedAmount > 0) {
-            doubleCheckedAmount = withdrawHistoryService.checkMoney(sender, checkedAmount);
-        }
-        // 출금 api 호출
-        WithdrawHistory withdrawHistory = WithdrawHistory.createWithdraw(sender, doubleCheckedAmount);
-
-        /**
-         *
-         */
-
-        RemitHistory remitHistory = RemitHistory.createTransaction(depositHistory, withdrawHistory, receiverPublicKey, senderPrivateKey, amount);
         // 저장
         remitHistoryRepository.save(remitHistory);
 
         return remitHistory.getId();
     }
 
-    public int checkAmount (String amount) {
+    @Transactional(rollbackFor = {Exception.class})
+    public Map<String, Object> depositAndWithdrawApiCalls(String receiverPublicKey, String senderPrivateKey, String amount) {
 
-        int integerAmount = 0;
-        try {
-            integerAmount = Integer.parseInt(amount);
-        } catch(InvalidAmountException e) {
-            return -999;
-//            throw new InvalidAmountException("잘못된 금액 입니다.");
+        Map<String, Object> resultCodesMap = new HashMap<>();
+
+        Map<String, String> depositResultMap = depositApiService.callDepositApi(receiverPublicKey, amount);
+//        System.out.println("## depositResultMap: " + depositResultMap.get("resultCode"));
+        if(depositResultMap != null) {
+            resultCodesMap.put("depositResultCode", depositResultMap.get("resultCode"));
+        } else {
+            resultCodesMap.put("depositResultCode", null);
         }
 
-        if(integerAmount <= 0) {
-            return -999;
-//            throw new InvalidAmountException("입금액이 너무 적습니다.");
-        } else{
-            return integerAmount;
+        Map<String, String> withdrawResultMap = withdrawApiService.callWithdrawApi(senderPrivateKey, amount);
+//        System.out.println("## withdrawResultCode: " + withdrawResultMap.get("resultCode"));
+        if(withdrawResultMap != null) {
+            resultCodesMap.put("withdrawResultCode", withdrawResultMap.get("resultCode"));
+        } else {
+            resultCodesMap.put("withdrawResultCode", null);
         }
+
+        return resultCodesMap;
     }
 
-    public RemitHistory findOne(Long id) {
-        return remitHistoryRepository.findOne(id);
-    }
+    public ResultCode findResultCode (String stringResultCode) {
 
+        ResultCode findResult = null;
+        switch(stringResultCode) {
+            case "SUCCESS" :
+                findResult = ResultCode.SUCCESS;
+            break;
+            case "INVALIDAMOUNT" :
+                findResult = ResultCode.INVALIDAMOUNT;
+            break;
+            case "RECEIVERERROR" :
+                findResult = ResultCode.RECEIVERERROR;
+            break;
+            case "SENDERERROR":
+                findResult = ResultCode.SENDERERROR;
+            break;
+            case "LACKOFMONEY":
+                findResult = ResultCode.LACKOFMONEY;
+            break;
+            case "OTHERPROBLEMS":
+                findResult = ResultCode.OTHERPROBLEMS;
+                break;
+            default:
+                break;
+        }
+
+        return findResult;
+    }
 }
