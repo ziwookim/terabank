@@ -31,12 +31,16 @@ public class InitDb {
         private final EntityManager em;
 
         public void dbInitSender() {
-            Account sender = createAccount("sender", 100000, "123456", "654321");
+            Account sender = createAccount("sender", 100000,
+                    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZW5kZXIiLCJpYXQiOjE2NjM4NTIxMjN9.Ea9QUVeBNEG2eoxCzH7hnxjYWJWDsGoohJt5G09EMz4",
+                    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZW5kZXIiLCJpYXQiOjE2NjM4NTIxMjN9.FVQmVG9OP7Xf7-n9MNA2_n8598BdHgCFvm0CXguiyuc");
             em.persist(sender);
         }
 
         public void dbInitReceiver() {
-            Account receiver = createAccount("receiver", 0, "234567", "765432");
+            Account receiver = createAccount("receiver", 0,
+                    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZWNlaXZlciIsImlhdCI6MTY2Mzg1MjE0NH0.LuwsgcMNB4w0ApquZ2i6-8PLiqP8X18Br6esywFLjmY",
+                    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZWNlaXZlciIsImlhdCI6MTY2Mzg1MjE0NH0.wCdEajB9TQ0e6gZl1I5crahLazIkjiv0VOsoKRqC2RM");
             em.persist(receiver);
         }
 
