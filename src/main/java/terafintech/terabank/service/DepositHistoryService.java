@@ -1,12 +1,13 @@
 package terafintech.terabank.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import terafintech.terabank.domain.Account;
 import terafintech.terabank.domain.DepositHistory;
-import terafintech.terabank.domain.ResultCode;
-import terafintech.terabank.exception.InvalidAmountException;
 import terafintech.terabank.repository.AccountRepository;
 import terafintech.terabank.repository.DepositHistoryRepository;
 
@@ -14,6 +15,8 @@ import terafintech.terabank.repository.DepositHistoryRepository;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class DepositHistoryService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DepositHistoryService.class);
 
     private final DepositHistoryRepository depositHistoryRepository;
     private final AccountRepository accountRepository;

@@ -1,6 +1,10 @@
 package terafintech.terabank.api;
 
+import ch.qos.logback.core.joran.spi.NoAutoStart;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +22,8 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 public class WithdrawApiController {
+
+    private static final Logger logger = LoggerFactory.getLogger(WithdrawApiController.class);
 
     private final WithdrawHistoryService withdrawHistoryService;
 
@@ -38,6 +44,7 @@ public class WithdrawApiController {
         }
 
         return new CreateWithdrawResponse(withdrawHistory.getResultCode().toString(), senderId, balance);
+
     }
 
     public int checkAmount (String amount) {

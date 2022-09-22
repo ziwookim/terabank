@@ -11,6 +11,8 @@ import terafintech.terabank.repository.RemitHistoryRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,12 +29,10 @@ public class RemitHistoryService {
         return remitHistoryRepository.findOne(id);
     }
 
-    @Async
     @Transactional
-    public Long remit(String receiverPublicKey, String senderPrivateKey, String amount) {
+    public Long remit(String receiverPublicKey, String senderPrivateKey, String amount) throws ExecutionException, InterruptedException {
 
         logger.info("called RemitHistoryService remit()");
-
         /**
          * 입금 api 호출 + 출금 api 호출
          */
@@ -50,24 +50,40 @@ public class RemitHistoryService {
     }
 
     @Transactional(rollbackFor = {Exception.class})
-    public Map<String, Object> depositAndWithdrawApiCalls(String receiverPublicKey, String senderPrivateKey, String amount) {
+    public Map<String, Object> depositAndWithdrawApiCalls(String receiverPublicKey, String senderPrivateKey, String amount) throws InterruptedException, ExecutionException {
 
         Map<String, Object> resultCodesMap = new HashMap<>();
+        resultCodesMap.put("depositResultCode", null);
+        resultCodesMap.put("withdrawResultCode", null);
 
-        Map<String, String> depositResultMap = depositApiService.callDepositApi(receiverPublicKey, amount);
-        logger.info("## depositResultMap: {}", depositResultMap.get("resultCode"));
-        if(depositResultMap != null) {
-            resultCodesMap.put("depositResultCode", depositResultMap.get("resultCode"));
-        } else {
-            resultCodesMap.put("depositResultCode", null);
+        logger.info("RemitHistoryService depositAndWithdrawApiCalls... asyncTime...");
+        logger.info("callDepositApi");
+        Future<String> depositResult = depositApiService.callDepositApi(receiverPublicKey, amount);
+        logger.info("callWithdrawApi");
+        Future<String> withdrawResult = withdrawApiService.callWithdrawApi(senderPrivateKey, amount);
+
+        while(true) {
+            if(depositResult.isDone()) {
+                logger.info("## depositResultMap: {}", depositResult.get());
+                resultCodesMap.replace("depositResultCode", depositResult.get());
+                break;
+            }
+            if(depositResult.isCancelled()) {
+                logger.info("### depositApi didn't work well. ###");
+                break;
+            }
         }
 
-        Map<String, String> withdrawResultMap = withdrawApiService.callWithdrawApi(senderPrivateKey, amount);
-        logger.info("## withdrawResultCode: {}", withdrawResultMap.get("resultCode"));
-        if(withdrawResultMap != null) {
-            resultCodesMap.put("withdrawResultCode", withdrawResultMap.get("resultCode"));
-        } else {
-            resultCodesMap.put("withdrawResultCode", null);
+        while(true) {
+            if(withdrawResult.isDone()) {
+                logger.info("## withdrawResultCode: {}", withdrawResult.get());
+                resultCodesMap.replace("withdrawResultCode", withdrawResult.get());
+                break;
+            }
+            if (withdrawResult.isCancelled()) {
+                logger.info("### withdrawApi didn't work well. ###");
+                break;
+            }
         }
 
         return resultCodesMap;

@@ -9,6 +9,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import terafintech.terabank.dto.CreateDepositResponse;
@@ -16,14 +18,16 @@ import terafintech.terabank.dto.CreateWithdrawResponse;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 @Service
 public class WithdrawApiService {
 
-    public Map<String, String> callWithdrawApi(String senderPrivateKey, String amount) {
+    @Async
+    public Future<String> callWithdrawApi(String senderPrivateKey, String amount) {
 
-        Map<String, String> result = new HashMap<>();
-        String returnString = "";
+//        Map<String, String> result = new HashMap<>();
+        String result = "";
 
         RestTemplate restTemplate = new RestTemplate(); // 비동기 전달
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -44,17 +48,18 @@ public class WithdrawApiService {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            String resultCode = mapper.readTree(responseEntity.getBody()).get("resultCode").asText();
-            result.put("resultCode", resultCode);
+            result = mapper.readTree(responseEntity.getBody()).get("resultCode").asText();
+//            resultMap.put("resultCode", result);
         } catch (JsonProcessingException e) {
 //            e.printStackTrace();
-            result.put("body", responseEntity.getBody());
+//            result.put("body", responseEntity.getBody());
+            result = responseEntity.getBody();
         }
 
 //        result.put("statusCode", responseEntity.getStatusCodeValue());
 //        result.put("headers", responseEntity.getHeaders());
 //        result.put("body", responseEntity.getBody());
 
-        return result;
+        return new AsyncResult<>(result);
     }
 }

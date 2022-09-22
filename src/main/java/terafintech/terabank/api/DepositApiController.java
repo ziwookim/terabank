@@ -1,6 +1,9 @@
 package terafintech.terabank.api;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,7 +11,6 @@ import terafintech.terabank.domain.DepositHistory;
 import terafintech.terabank.domain.ResultCode;
 import terafintech.terabank.dto.CreateDepositRequest;
 import terafintech.terabank.dto.CreateDepositResponse;
-import terafintech.terabank.exception.InvalidAmountException;
 import terafintech.terabank.service.DepositHistoryService;
 
 import javax.validation.Valid;
@@ -16,6 +18,8 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 public class DepositApiController {
+
+    private static final Logger logger = LoggerFactory.getLogger(DepositApiController.class);
 
     private final DepositHistoryService depositHistoryService;
 
@@ -34,6 +38,7 @@ public class DepositApiController {
         }
 
         return new CreateDepositResponse(depositHistory.getResultCode().toString(), receiverId);
+
     }
 
     public int checkAmount (String amount) {

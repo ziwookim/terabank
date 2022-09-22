@@ -1,6 +1,9 @@
 package terafintech.terabank.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import terafintech.terabank.domain.Account;
@@ -13,6 +16,8 @@ import terafintech.terabank.repository.WithdrawHistoryRepository;
 @RequiredArgsConstructor
 public class WithdrawHistoryService {
 
+    private static final Logger logger = LoggerFactory.getLogger(WithdrawHistoryService.class);
+
     private final WithdrawHistoryRepository withdrawHistoryRepository;
     private final AccountRepository accountRepository;
 
@@ -21,8 +26,8 @@ public class WithdrawHistoryService {
     }
 
     @Transactional
-    public Long withdraw(String senderPrivateKey, int amount)
-    {
+    public Long withdraw(String senderPrivateKey, int amount) {
+
         Account sender = null;
         if(amount > 0) {
             sender = checkSender(senderPrivateKey);
