@@ -6,10 +6,10 @@ import lombok.Data;
 public class CreateRemitResponse {
 
     private String returnCode;
-    private String transactionHistoryId;
+    private String remitHistoryId;
 
-    public CreateRemitResponse(String returnCode, String transactionHistoryId) {
+    public CreateRemitResponse(String returnCode, String remitHistoryId) {
         this.returnCode = returnCode;
-        this.transactionHistoryId = transactionHistoryId;
+        this.remitHistoryId = remitHistoryId;
     }
 }

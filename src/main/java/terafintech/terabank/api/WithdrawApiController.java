@@ -28,7 +28,12 @@ public class WithdrawApiController {
     private final WithdrawHistoryService withdrawHistoryService;
 
     @PostMapping("/api/withdraw")
-    public CreateWithdrawResponse createWithdraw(@RequestBody @Valid CreateWithdrawRequest request) {
+    public CreateWithdrawResponse createWithdraw(@RequestBody @Valid CreateWithdrawRequest request) throws InterruptedException {
+
+        logger.info("requestParam receiverPublickey: {}", request.getSenderPrivateKey());
+        logger.info("requestParam amount: {}", request.getAmount());
+
+//        Thread.sleep(10000);
 
         int checkedAmount = checkAmount(request.getAmount());
 
@@ -36,14 +41,14 @@ public class WithdrawApiController {
 
         WithdrawHistory withdrawHistory = withdrawHistoryService.findOne(id);
 
-        String senderId = "";
+        String senderUserId = "";
         int balance = 0;
         if(withdrawHistory.getSender() != null) {
-            senderId = withdrawHistory.getSender().getUserId();
+            senderUserId = withdrawHistory.getSender().getUserId();
             balance = withdrawHistory.getSender().getBalance();
         }
 
-        return new CreateWithdrawResponse(withdrawHistory.getResultCode().toString(), senderId, balance);
+        return new CreateWithdrawResponse(withdrawHistory.getResultCode().toString(), senderUserId, balance);
 
     }
 

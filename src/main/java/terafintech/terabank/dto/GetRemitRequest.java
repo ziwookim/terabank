@@ -7,6 +7,5 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class GetRemitRequest {
 
-    @NotEmpty
     private String id;
 }

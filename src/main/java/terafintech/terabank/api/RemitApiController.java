@@ -1,6 +1,7 @@
 package terafintech.terabank.api;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +10,8 @@ import terafintech.terabank.dto.CreateRemitResponse;
 import terafintech.terabank.domain.RemitHistory;
 import terafintech.terabank.dto.GetRemitReponse;
 import terafintech.terabank.dto.GetRemitRequest;
+import terafintech.terabank.exception.InvalidRemitIdException;
+import terafintech.terabank.exception.NotExistRemitIdException;
 import terafintech.terabank.service.RemitHistoryService;
 
 import javax.validation.Valid;
@@ -30,7 +33,7 @@ public class RemitApiController {
         return new CreateRemitResponse(remitHistory.getResultCode().toString(), remitHistory.getId().toString());
     }
 
-    @PostMapping("/api/remitInfo")
+    @GetMapping("/api/remit/info")
     public GetRemitReponse getRemit(@RequestBody @Valid GetRemitRequest request) {
 
         String strId = request.getId();
@@ -38,7 +41,7 @@ public class RemitApiController {
         try {
             id = Long.valueOf(strId);
         } catch (NumberFormatException e) {
-            return new GetRemitReponse("잘못된 식별 키를 입력하셨습니다.");
+            throw new InvalidRemitIdException("잘못된 거래 식별 키를 입력하셨습니다.");
         }
 
         try{
@@ -46,9 +49,9 @@ public class RemitApiController {
             if(!remitHistory.equals(null)) {
                 return new GetRemitReponse(remitHistory.getResultCode().toString());
             }
-            return new GetRemitReponse("존재하지 않는 식별 키 입니다.");
+            throw new NotExistRemitIdException("존재하지 않는 거래 식별 키 입니다.");
         } catch (Exception e) {
-            return new GetRemitReponse("존재하지 않는 식별 키 입니다.");
+            throw new NotExistRemitIdException("존재하지 않는 거래 식별 키 입니다.");
         }
     }
 }

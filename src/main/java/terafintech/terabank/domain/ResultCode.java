@@ -12,12 +12,12 @@ public enum ResultCode {
     SUCCESS(100),
 
     /**
-     * 잔액부족
+     * 잔액 부족
      */
     LACKOFMONEY(400),
 
     /**
-     * 입금액 입력 오류
+     * 금액 오류
      */
     INVALIDAMOUNT(7777),
 

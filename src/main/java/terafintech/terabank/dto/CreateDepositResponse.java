@@ -7,10 +7,10 @@ import lombok.Data;
 public class CreateDepositResponse {
 
     private String resultCode;
-    private String receiverId;
+    private String receiverUserId;
 
-    public CreateDepositResponse(String resultCode, String receiverId) {
+    public CreateDepositResponse(String resultCode, String receiverUserId) {
         this.resultCode = resultCode;
-        this.receiverId = receiverId;
+        this.receiverUserId = receiverUserId;
     }
 }

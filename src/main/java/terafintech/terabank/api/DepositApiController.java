@@ -3,12 +3,10 @@ package terafintech.terabank.api;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import terafintech.terabank.domain.DepositHistory;
-import terafintech.terabank.domain.ResultCode;
 import terafintech.terabank.dto.CreateDepositRequest;
 import terafintech.terabank.dto.CreateDepositResponse;
 import terafintech.terabank.service.DepositHistoryService;
@@ -24,7 +22,12 @@ public class DepositApiController {
     private final DepositHistoryService depositHistoryService;
 
     @PostMapping("/api/deposit")
-    public CreateDepositResponse createDeposit(@RequestBody @Valid CreateDepositRequest request) {
+    public CreateDepositResponse createDeposit(@RequestBody @Valid CreateDepositRequest request) throws InterruptedException {
+
+        logger.info("requestParam receiverPublickey: {}", request.getReceiverPublicKey());
+        logger.info("requestParam amount: {}", request.getAmount());
+
+//        Thread.sleep(10000);
 
         int checkedAmount = checkAmount(request.getAmount());
 
@@ -32,12 +35,12 @@ public class DepositApiController {
 
         DepositHistory depositHistory = depositHistoryService.findOne(id);
 
-        String receiverId = "";
+        String receiverUserId = "";
         if(depositHistory.getReceiver() != null) {
-            receiverId = depositHistory.getReceiver().getUserId();
+            receiverUserId = depositHistory.getReceiver().getUserId();
         }
 
-        return new CreateDepositResponse(depositHistory.getResultCode().toString(), receiverId);
+        return new CreateDepositResponse(depositHistory.getResultCode().toString(), receiverUserId);
 
     }
 
