@@ -31,6 +31,9 @@ dependencies {
 
 	implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
 
+	implementation('org.slf4j:jcl-over-slf4j')
+	implementation('ch.qos.logback:logback-classic')
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'

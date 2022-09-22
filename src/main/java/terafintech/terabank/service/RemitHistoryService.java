@@ -1,6 +1,9 @@
 package terafintech.terabank.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import terafintech.terabank.domain.*;
@@ -14,6 +17,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RemitHistoryService {
 
+    private static final Logger logger = LoggerFactory.getLogger(RemitHistoryService.class);
+
     private final RemitHistoryRepository remitHistoryRepository;
     private final DepositApiService depositApiService;
     private final WithdrawApiService withdrawApiService;
@@ -22,8 +27,11 @@ public class RemitHistoryService {
         return remitHistoryRepository.findOne(id);
     }
 
+    @Async
     @Transactional
     public Long remit(String receiverPublicKey, String senderPrivateKey, String amount) {
+
+        logger.info("called RemitHistoryService remit()");
 
         /**
          * 입금 api 호출 + 출금 api 호출
@@ -47,7 +55,7 @@ public class RemitHistoryService {
         Map<String, Object> resultCodesMap = new HashMap<>();
 
         Map<String, String> depositResultMap = depositApiService.callDepositApi(receiverPublicKey, amount);
-//        System.out.println("## depositResultMap: " + depositResultMap.get("resultCode"));
+        logger.info("## depositResultMap: {}", depositResultMap.get("resultCode"));
         if(depositResultMap != null) {
             resultCodesMap.put("depositResultCode", depositResultMap.get("resultCode"));
         } else {
@@ -55,7 +63,7 @@ public class RemitHistoryService {
         }
 
         Map<String, String> withdrawResultMap = withdrawApiService.callWithdrawApi(senderPrivateKey, amount);
-//        System.out.println("## withdrawResultCode: " + withdrawResultMap.get("resultCode"));
+        logger.info("## withdrawResultCode: {}", withdrawResultMap.get("resultCode"));
         if(withdrawResultMap != null) {
             resultCodesMap.put("withdrawResultCode", withdrawResultMap.get("resultCode"));
         } else {
