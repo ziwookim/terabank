@@ -11,8 +11,9 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest
 class TerabankApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+//	@Test
+//	void contextLoads() {
+//
+//	}
 
 }

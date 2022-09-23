@@ -1,9 +1,7 @@
 spring:
   datasource:
-#    url: jdbc:h2:./terabank
-#    username: terabank
-#    password: 1234
-    url: jdbc:h2:tcp://localhost/~/jpashop
+#    url: jdbc:h2:tcp://localhost/~/jpashop
+    url: jdbc:h2:tcp://localhost:1521/test
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -22,7 +20,6 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
-
 
 config:
   token:
