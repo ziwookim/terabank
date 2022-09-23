@@ -612,9 +612,7 @@ COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
-
-
-#### <a href id="dockerimages"/>Docker Image 파일 -> 'dockerImages' 폴더에 저장
+#### <a id="dockerimages"/>Docker Image 파일 -> 'dockerImages' 폴더에 저장
 ```
 h2.tar  <- h2 데이터 베이스 관련 파일
 terabank-app.tar  <- 소스 빌드 관련 파일
