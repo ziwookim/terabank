@@ -14,7 +14,6 @@ spring:
         format_sql: true
 
 ########## ! test 환경에서 datasource 설정 아예 하지 않는 경우, SpringBoot가 자동으로 Memory Mode로 실행한다.
-
 logging:
   level:
     org.hibernate.SQL: debug
