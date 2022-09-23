@@ -1,6 +1,4 @@
 # terabank
-<<<<<<< HEAD
-=======
 
 [토큰 생성 방법](#token)
 
@@ -619,4 +617,3 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 h2.tar  <- h2 데이터 베이스 관련 파일
 terabank-app.tar  <- 소스 빌드 관련 파일
 ```
->>>>>>> 329bc8dddd52e78e89053f238ea14a5351fa7246
