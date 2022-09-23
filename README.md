@@ -1,13 +1,12 @@
 # terabank
 
-1. 토큰 생성 방법
-[text](#token)
+[1. 토큰 생성 방법](#token)
 
-2. 입금 / 출금 / 송금 응답 코드 - 공통 응답 코드
-[text](#resultCode)
+[2. 입금 / 출금 / 송금 응답 코드 - 공통 응답 코드](#resultCode)
 
 --- 
-####<a id="token" /> 토큰 생성 방법
+#### <a id="token" />토큰 생성 방법
+
 
 ```
 -   JWT(JSON Web Token 토큰 기반인증)을 이용한 토큰 생성
@@ -16,7 +15,7 @@
 ```
 
 
-####<a id="resultCode" /> 입금 / 출금 / 송금 응답 코드 - 공통 응답 코드
+#### <a id="resultCode" />입금 / 출금 / 송금 응답 코드 - 공통 응답 코드
 
 ```
 public enum ResultCode {
