@@ -96,7 +96,7 @@ public enum ResultCode {
 }
 ```
 
-[##_Image|kage@KxpLE/btrMzRp5kWW/V8zALBVSGgumZLB9qrMVXK/img.png|CDM|1.3|{"originWidth":1758,"originHeight":228,"style":"alignCenter","caption":"IllegalStateException"}_##]
+[[##_Image|kage@KxpLE/btrMzRp5kWW/V8zALBVSGgumZLB9qrMVXK/img.png|CDM|1.3|{"originWidth":1758,"originHeight":228,"style":"alignCenter","caption":"IllegalStateException"}_##]](https://blog.kakaocdn.net/dn/KxpLE/btrMzRp5kWW/V8zALBVSGgumZLB9qrMVXK/img.png)
 
 \- 테스트 케이스3 (예상 결과: ID 길이 유효성 관련 오류 발생)
 
