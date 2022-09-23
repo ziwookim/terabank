@@ -1,5 +1,6 @@
 # terabank
----
+
+
 #### 토큰 생성 방법
 
 ```
@@ -7,6 +8,7 @@
 -   application.yml 파일에 'config.token' 이라는 랜덤 문자열 150자 설정.
 -   회원 가입시, 생성한 토큰을 Account 테이블에 저장한다.
 ```
+
 
 #### 입금 / 출금 / 송금 응답 코드 목록 (공통 응답 코드)
 
@@ -55,6 +57,7 @@ public enum ResultCode {
 
 \- response feld: userId(사용자 ID), publicKey(사용자 공개키), privateKey(사용자 비밀키)
 
+
 \- 테스트 케이스1 (예상 결과: 정상 처리)
 
 -   requestBody
@@ -74,6 +77,7 @@ public enum ResultCode {
     "privateKey": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNjYzNjczMjQ2LCJleHAiOjE2NjM2NzMyNDZ9.jWC__B-lDFbpdFM-62rPf3MFJAfLC-P12BjP2_l9hGI"
 }
 ```
+
 
 \- 테스트 케이스2 (예상 결과: 중복 ID 오류 발생)
 
@@ -98,6 +102,8 @@ public enum ResultCode {
 
 ![image](https://user-images.githubusercontent.com/50875502/192010668-016f0141-5b6a-4f37-8c50-c21074168368.png)
 
+
+
 \- 테스트 케이스3 (예상 결과: ID 길이 유효성 관련 오류 발생)
 
 -   requestBody
@@ -119,7 +125,9 @@ public enum ResultCode {
 }
 ```
 
-[##_Image|kage@s9qt2/btrMDQiXxFY/05KK2T8tQKu4IbKc9LVAsk/img.png|CDM|1.3|{"originWidth":2054,"originHeight":216,"style":"alignCenter","width":1070,"height":113,"caption":"IllegalStateException"}_##]
+![image](https://user-images.githubusercontent.com/50875502/192010874-6ac33d42-17ed-4677-90f6-c01750f82b78.png)
+
+
 
 #### 2\. 입금 처리 API (POST)
 
@@ -128,6 +136,7 @@ public enum ResultCode {
 \- request parameter: receiverPublicKey(입금 받을 사용자 공개 키), amount(입금 금액)
 
 \- response field: resultCode(응답 코드), receiverUserId(입금 받은 사용자 ID)
+
 
 \- 테스트 케이스1 (예상 resultCode: SUCCESS)
 
@@ -149,6 +158,7 @@ public enum ResultCode {
 }
 ```
 
+
 \- 테스트 케이스2 (예상 resultCode: RECEIVERERROR)
 
 -   requestBody
@@ -169,6 +179,7 @@ public enum ResultCode {
 }
 ```
 
+
 \- 테스트 케이스3 (예상 resultCode: RECEIVERERROR)
 
 -   requestBody
@@ -188,6 +199,7 @@ public enum ResultCode {
     "receiverUserId": ""
 }
 ```
+
 
 \- 테스트 케이스4 (예상 resultCode: INVALIDAMOUNT)
 
@@ -229,6 +241,7 @@ public enum ResultCode {
 }
 ```
 
+
 #### 3\. 출금 처리 API (POST)
 
 \- URL: /api/withdraw ([http://localhost:8080/api/withdraw](http://localhost:8080/api/account))
@@ -236,6 +249,7 @@ public enum ResultCode {
 \- request parameter: senderPrivateKey(출금될 사용자 비밀키), amount(입금 금액)
 
 \- response field: resultCode(응답 코드), senderUserId(출금된 사용자 user ID), balance(출금 후 잔액)
+
 
 \- 테스트 케이스1 (예상 resultCode: SUCCESS)
 
@@ -258,6 +272,7 @@ public enum ResultCode {
 }
 ```
 
+
 \- 테스트 케이스2 (예상 resultCode: SENDERERROR)
 
 -   requestBody
@@ -278,6 +293,7 @@ public enum ResultCode {
     "balance": 0
 }
 ```
+
 
 \- 테스트 케이스3 (예상 resultCode: SENDERERROR)
 
@@ -300,6 +316,7 @@ public enum ResultCode {
 }
 ```
 
+
 \- 테스트 케이스4 (예상 resultCode: INVALIDAMOUNT)
 
 -   requestBody
@@ -320,6 +337,7 @@ public enum ResultCode {
     "balance": 0
 }
 ```
+
 
 \- 테스트 케이스5 (예상 resultCode: INVALIDAMOUNT)
 
@@ -342,6 +360,7 @@ public enum ResultCode {
 }
 ```
 
+
 \- 테스트 케이스6 (예상 resultCode: LACKOFMONEY)
 
 -   requestBody
@@ -362,6 +381,7 @@ public enum ResultCode {
     "balance": 100000
 }
 ```
+
 
 #### 4\. 송금 처리 API (POST)
 
@@ -392,6 +412,7 @@ public enum ResultCode {
 }
 ```
 
+
 \- 테스트 케이스2 (예상 resultCode: RECEIVERERROR)
 
 -   requestBody
@@ -412,6 +433,7 @@ public enum ResultCode {
     "remitHistoryId": "11"
 }
 ```
+
 
 \- 테스트 케이스3 (예상 resultCode: SENDERERROR)
 
@@ -434,6 +456,7 @@ public enum ResultCode {
 }
 ```
 
+
 \- 테스트 케이스4 (예상 resultCode: LACKOFMONEY)
 
 -   requestBody
@@ -455,6 +478,7 @@ public enum ResultCode {
 }
 ```
 
+
 #### 5\. 송금 처리 결과 조회 API (GET)
 
 \- URL: /api/remit/info ([http://localhost:8080/api/remit/info](http://localhost:8080/api/account))
@@ -462,6 +486,7 @@ public enum ResultCode {
 \- request parameter: id(거래 식별키)
 
 \- response field: resultCode(거래 결과 코드)
+
 
 \- 테스트 케이스1 (예상 결과: 정상 조회)
 
@@ -480,6 +505,7 @@ public enum ResultCode {
     "returnCode": "LACKOFMONEY"
 }
 ```
+
 
 \- 테스트 케이스2 (예상 결과: 조회 실패)
 
@@ -502,7 +528,9 @@ public enum ResultCode {
 }
 ```
 
-[##_Image|kage@cGQEiL/btrMPfQggdM/HZItg8l0wPhQDS6ToHEFt0/img.png|CDM|1.3|{"originWidth":1730,"originHeight":132,"style":"alignCenter","caption":"NotExistRemitException"}_##]
+
+![image](https://user-images.githubusercontent.com/50875502/192011154-a4be6a45-d3f2-4e31-83eb-a764297687fd.png)
+
 
 \- 테스트 케이스3 (예상 결과: 조회 실패)
 
@@ -525,7 +553,9 @@ public enum ResultCode {
 }
 ```
 
+![image](https://user-images.githubusercontent.com/50875502/192011203-3680a043-4b10-46f3-a129-5e90c3a18bac.png)
 [##_Image|kage@IYikO/btrMNhhJW4k/44cz8zFv4Qy2lFjo2PO1u0/img.png|CDM|1.3|{"originWidth":1734,"originHeight":142,"style":"alignCenter","caption":"InvalidRemitIdException"}_##]
+
 
 \- 테스트 케이스4 (예상 결과: 조회 실패)
 
@@ -548,7 +578,8 @@ public enum ResultCode {
 }
 ```
 
-[##_Image|kage@BV66T/btrMOWpNnQ7/KrAOR3w30HFKOKXE0LrOv1/img.png|CDM|1.3|{"originWidth":1730,"originHeight":138,"style":"alignCenter","caption":"InvalidRemitIdException"}_##]
+![image](https://user-images.githubusercontent.com/50875502/192011271-c3863146-83e9-44e4-a8bb-75c29df8477e.png)
+
 
 #### DockerFile
 
@@ -558,4 +589,10 @@ ARG JAR_FILE=build/libs/*.jar
 VOLUME /tmp
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+
+### Dockerfile -> 'dockerImages' 폴더에 저장
+```
+h2.tar  <- h2 데이터 베이스 관련 파일
+terabank-app.tar  <- 소스 빌드 관련 파일
 ```
