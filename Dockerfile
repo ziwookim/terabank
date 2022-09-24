@@ -28,6 +28,7 @@ CMD java -cp /opt/h2/bin/h2*.jar org.h2.tools.Server \
     -baseDir ${DATA_DIR} ${H2_OPTIONS}
 
 
+
 ## spring app for docker
 FROM amazoncorretto:11-alpine3.13
 ARG JAR_FILE=build/libs/*.jar
