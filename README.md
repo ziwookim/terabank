@@ -14,7 +14,7 @@
 
 [송금 처리 결과 조회 API](#remitInfoApi)
 
-[Dockerfile](#Dockerfile)
+[Dockerfile](#https://github.com/ziwookim/terabank/blob/main/Dockerfile)
 
 --- 
 
